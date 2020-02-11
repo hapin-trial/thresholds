@@ -170,6 +170,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
 				loc = strsplit(basename(file), "_")[[1]][2],
 				study_phase = strsplit(basename(file), "_")[[1]][3],
 				filter_id = meta_data[V1=='Filter ID#:', V2],
+				filter_id2 =  strsplit(basename(file), "_")[[1]][5], #use file name filter id
 				sampling_mode = meta_data[V1=='System Times', V2]
 				#shutdown_reason = raw_data[shutdown_reason!='', paste(unique(shutdown_reason), collapse=",")]
 				# shutdown_reason = tail(raw_data[!is.na(shutdown_reason) & shutdown_reason != '', shutdown_reason],1)
