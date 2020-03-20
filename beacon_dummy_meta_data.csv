@@ -1,2 +1,2 @@
-file,qa_date,datetime_start,serial,serial_in_file,pid,loc,sample_date,study_phase,sampling_rate_minutes,datetime_instrument_on,dur,completeness_fl,sample_interval_fl,beacon_time_fl,startup_proc_fl,duration_fl,flag_total,flags
-,,,,,,,,,,,,0,0,0,0,0,0,
+file,qa_date,datetime_start,serial,serial_in_file,pid,loc,sample_date,study_phase,sampling_rate_minutes,dur,completeness_fl,sample_interval_fl,beacon_time_fl,startup_proc_fl,duration_fl,flag_total,flags,filename_fl
+,,,,,,,,,,,0,0,0,0,0,0,,0
