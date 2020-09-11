@@ -221,12 +221,16 @@ ecm_qa <- function(file, setShiny=TRUE){
 			bl_flag <- if(any(abs(bl_diffs)>=bl_shift_threshold,na.rm = TRUE) || sum(is.na(bl_diffs)) > 0){1}else{0}
 
 			#inlet pressure flag
-			inletp_flag <- if(raw_data_long[variable=='inlet_pres' & !is.na(value), any(value>5)]){1}else{0}
+			#inletp_flag <- if(raw_data_long[variable=='inlet_pres' & !is.na(value), any(value>5)]){1}else{0}
+				#updated.  If more than 5% of data points are above 5, flag it.
+			inletp_flag <- if(raw_data_long[variable=='inlet_pres' & !is.na(value), quantile(value,0.05,na.rm = T)>5]){1}else{0}
+			
+			#temperature range flag.  If more than 5% of points are outside the temp threshold, flag it.  
+			#temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), any(!(value %between% temp_thresholds))]){1}else{0}
+			temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), sum(!(value %between% temp_thresholds))>0.05*length(value)]){1}else{0}
 
-			#temperature range flag
-			temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), any(!(value %between% temp_thresholds))]){1}else{0}
-
-			rh_flag <- if(!is.na(raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)])&raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)]){1}else{0}
+			#rh_flag <- if(!is.na(raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)])&raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)]){1}else{0}
+			rh_flag <- if(raw_data_long[variable=='rh' & !is.na(value), sum(!(value < rh_threshold))>0.05*length(value)]){1}else{0}
 
 			#negative neph values
 			neph_mean <- round(raw_data[, mean(rh_cor_neph, na.rm=T)],0)
@@ -242,12 +246,16 @@ ecm_qa <- function(file, setShiny=TRUE){
 			#mean flow rate, flows outside of range
 			flow_mean <- round(raw_data[, mean(flow, na.rm=T)],3)
 			flow_sd <- round(raw_data[, sd(flow, na.rm=T)], 3)
-			flow_min <- raw_data[, min(flow, na.rm=T)]
-			flow_max <- raw_data[, max(flow, na.rm=T)]
+			#flow_min <- raw_data[, min(flow, na.rm=T)]
+			#flow_max <- raw_data[, max(flow, na.rm=T)]
+			flow_min <- quantile(raw_data[,flow],0.05,na.rm = TRUE)
+			flow_max <- quantile(raw_data[,flow],0.95,na.rm = TRUE)
 			flow_missing_percent <- round(100*raw_data[is.na(flow), length(flow)]/nrow(raw_data),2)
 			n_flow_deviation <- raw_data[!(flow %between% flow_thresholds), length(flow)]
 			percent_flow_deviation <- round(raw_data[!(flow %between% flow_thresholds), length(flow)]/raw_data[flow %between% flow_thresholds, length(flow)],2)
-			flow_flag <- if(percent_flow_deviation>flow_cutoff_threshold | is.nan(percent_flow_deviation) | flow_min<flow_min_threshold | flow_max>flow_max_threshold | raw_data[,any(shutdown_reason %like% "Flow blocked")] | flow_missing_percent == 100){1}else{0}
+			n_shutdown_reasons <- sum(raw_data[,shutdown_reason %like% "Flow blocked"]) #Flag if more than 60 instances of flow blocked (five minutes equivalent)
+			flow_flag <- if(percent_flow_deviation>flow_cutoff_threshold | is.nan(percent_flow_deviation) | flow_min<flow_min_threshold | flow_max>flow_max_threshold | n_shutdown_reasons>60 | flow_missing_percent == 100){1}else{0}
+
 
 			#sample duration
 			sample_duration <- raw_data_long[variable=='rh_cor_neph' & !is.na(value), as.numeric(difftime(max(datetime), min(datetime), units='mins'))]
