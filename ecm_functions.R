@@ -225,12 +225,12 @@ ecm_qa <- function(file, setShiny=TRUE){
 				#updated.  If more than 5% of data points are above 5, flag it.
 			inletp_flag <- if(raw_data_long[variable=='inlet_pres' & !is.na(value), quantile(value,0.05,na.rm = T)>5]){1}else{0}
 			
-			#temperature range flag.  If more than 5% of points are outside the temp threshold, flag it.  
+			#temperature range flag.  If more than 50% of points are outside the temp threshold, flag it.  
 			#temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), any(!(value %between% temp_thresholds))]){1}else{0}
-			temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), sum(!(value %between% temp_thresholds))>0.05*length(value)]){1}else{0}
+			temp_flag <- if(raw_data_long[variable=='temp' & !is.na(value), sum(!(value %between% temp_thresholds))>0.5*length(value)]){1}else{0}
 
 			#rh_flag <- if(!is.na(raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)])&raw_data_long[variable=='rh' & !is.na(value), (mean(value)>rh_threshold)]){1}else{0}
-			rh_flag <- if(raw_data_long[variable=='rh' & !is.na(value), sum(!(value < rh_threshold))>0.05*length(value)]){1}else{0}
+			rh_flag <- if(raw_data_long[variable=='rh' & !is.na(value), sum(!(value < rh_threshold))>0.5*length(value)]){1}else{0}
 
 			#negative neph values
 			neph_mean <- round(raw_data[, mean(rh_cor_neph, na.rm=T)],0)
