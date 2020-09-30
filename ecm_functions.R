@@ -1,15 +1,16 @@
-suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
-suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
-suppressWarnings(suppressPackageStartupMessages(library(plyr)))
-suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
-suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
-suppressWarnings(suppressPackageStartupMessages(library(devtools)))
-suppressWarnings(suppressPackageStartupMessages(library(zoo)))
-suppressWarnings(suppressPackageStartupMessages(library(digest)))
-suppressWarnings(suppressPackageStartupMessages(library(data.table)))
-suppressWarnings(suppressPackageStartupMessages(library(parallel)))
+# uncomment for running locally, makes things a little easier. 
+# suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
+# suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+# suppressWarnings(suppressPackageStartupMessages(library(plyr)))
+# suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+# suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
+# suppressWarnings(suppressPackageStartupMessages(library(devtools)))
+# suppressWarnings(suppressPackageStartupMessages(library(zoo)))
+# suppressWarnings(suppressPackageStartupMessages(library(digest)))
+# suppressWarnings(suppressPackageStartupMessages(library(data.table)))
+# suppressWarnings(suppressPackageStartupMessages(library(parallel)))
 
-dummy_meta_data <- fread('https://raw.githubusercontent.com/hapin-trial/thresholds/master/dummy_meta_data.csv')
+# dummy_meta_data <- fread('https://raw.githubusercontent.com/hapin-trial/thresholds/master/dummy_meta_data.csv')
 
 
 
