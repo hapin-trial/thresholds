@@ -1,4 +1,4 @@
-# uncomment for running locally, makes things a little easier. 
+## uncomment for running locally, makes things a little easier. 
 # suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
 # suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
 # suppressWarnings(suppressPackageStartupMessages(library(plyr)))
@@ -136,6 +136,24 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
 			mdy = raw_data[, as.numeric(difftime(max(mdy_hms(datetime, tz=tz)), min(mdy_hms(datetime, tz=tz))))]
     )))
 
+    if(date_formats[!is.na(value), length(value)]>1){
+    	#extract download date from metadata
+	    download_date <- mdy(meta_data[2,V2])
+	    #get the max date in the raw_data for which acc_comp is not missing (i.e. data is still logging, not some weird
+	    #post sampling artifact. May not be right.)
+    	max_file_date <- raw_data[nrow(raw_data[!is.na(acc_comp)]), datetime]
+    	#create revised date formats table: look for difference between DATE of download and DATE of the file's max timestamp
+	    revised_date_formats <- melt(data.table(
+	    	dmy = as.numeric(difftime(download_date, as.Date(suppressWarnings(dmy_hms(max_file_date))), unit = 'hours')),
+    		ymd = as.numeric(difftime(download_date, as.Date(suppressWarnings(ymd_hms(max_file_date))), unit = 'hours')),
+	    	mdy = as.numeric(difftime(download_date, as.Date(suppressWarnings(mdy_hms(max_file_date))), unit = 'hours'))
+	    ), measure.vars = c('dmy', 'ymd', 'mdy')
+	    )
+	    revised_date_formats[, value := abs(value)]
+	    # revised_date_formats[value == revised_date_formats[, min(value, na.rm = T)], variable]
+	    date_formats  <-  revised_date_formats
+	}
+
     if(all(is.na(date_formats$value))){
     	base::message(basename(file), " has no parseable date.")
 	    #add "fake" metadata
@@ -159,7 +177,11 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
 
 	    #find large breaks in data, remove everything before
 	    #per JL's suggestion
-	    drop_line_check <- raw_data[, diff(datetime)]>10
+	    #AP make seconds explicit, coerce to numeric
+	    #add acc_comp to ignore lines with USB stopping logging
+	    #is 10 seconds really the right threshold??
+	    drop_line_check <- raw_data[acc_comp!="", as.numeric(diff(datetime, unit = 'secs'))]>10
+
 	    if(any(drop_line_check)==TRUE){
 			drop_line <- min(which(drop_line_check))
 		}
@@ -287,7 +309,8 @@ ecm_qa <- function(file, setShiny=TRUE){
 			datetime_end <- max(raw_data_long$datetime)
 			
 			#Wearing compliance
-			raw_data$unique_min <- floor_date(raw_data$datetime, unit = "minute")
+			# raw_data$unique_min <- floor_date(raw_data$datetime, unit = "minute")
+			raw_data[, unique_min := floor_date(datetime, unit = "minute")]
 			
 			active.minute.average = ddply(raw_data, .(unique_min), summarise, 
 			                              # X.axis_SD = round(sd(acc_x, na.rm=TRUE), digits = 3),  #Only using composite acceleration atm, can add distinct axes if needed.
