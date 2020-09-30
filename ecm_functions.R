@@ -1,3 +1,18 @@
+suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+suppressWarnings(suppressPackageStartupMessages(library(plyr)))
+suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
+suppressWarnings(suppressPackageStartupMessages(library(devtools)))
+suppressWarnings(suppressPackageStartupMessages(library(zoo)))
+suppressWarnings(suppressPackageStartupMessages(library(digest)))
+suppressWarnings(suppressPackageStartupMessages(library(data.table)))
+suppressWarnings(suppressPackageStartupMessages(library(parallel)))
+
+dummy_meta_data <- fread('https://raw.githubusercontent.com/hapin-trial/thresholds/master/dummy_meta_data.csv')
+
+
+
 dummy_meta_data$download_date <-  as.POSIXct(dummy_meta_data$download_date)
 dummy_meta_data$file <-  as.character(dummy_meta_data$file)
 dummy_meta_data$datetime_start <-  as.Date(dummy_meta_data$datetime_start)
@@ -100,7 +115,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
     raw_data[, flow:=as.numeric(flow)]
 
     meta_data <- as.data.table(read.csv(file, nrow=14-skipflag, header=F, stringsAsFactor=F))
-	meta_data_dutycycle <- as.data.table(read.csv(file, skip = 11, nrows = 2, header = F, stringsAsFactors = F))
+	meta_data_dutycycle <- as.data.table(read.csv(file, skip = 11, nrows = 3, header = F, stringsAsFactors = F))
 
     #for the time being, we use precious little of this
     sensor_data <- as.data.table(read.csv(file, skip=13-skipflag, nrow=10, header=T, stringsAsFactor=F))[, c(1:6)]
@@ -171,7 +186,14 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
 				study_phase = strsplit(basename(file), "_")[[1]][3],
 				filter_id = meta_data[V1=='Filter ID#:', V2],
 				filter_id2 =  strsplit(basename(file), "_")[[1]][5], #use file name filter id
-				sampling_mode = meta_data[V1=='System Times', V2]
+				sampling_mode = 
+					if(meta_data_dutycycle[V1=='System Times', V2] == "No cycling - Always On"){
+						1
+					}else{
+					on_dc <- meta_data_dutycycle[V1=='System Times', as.numeric(V2)]
+					off_dc <- meta_data_dutycycle[V1=='System Times', as.numeric(V3)]
+					(on_dc/(on_dc + off_dc))
+				}
 				#shutdown_reason = raw_data[shutdown_reason!='', paste(unique(shutdown_reason), collapse=",")]
 				# shutdown_reason = tail(raw_data[!is.na(shutdown_reason) & shutdown_reason != '', shutdown_reason],1)
 	    )
