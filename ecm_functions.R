@@ -188,13 +188,13 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
       raw_data <- raw_data[abs(difftime(raw_data$datetime,median_time))<86400,]
       
       #is 10 seconds really the right threshold??
-      drop_line_check <- raw_data[acc_comp!="", as.numeric(diff(datetime, unit = 'secs'))]>10
+      # drop_line_check <- raw_data[acc_comp!="", as.numeric(diff(datetime, unit = 'secs'))]>10
       
-      if(any(drop_line_check)==TRUE){
-        drop_line <- min(which(drop_line_check))
-      }
+      # if(any(drop_line_check)==TRUE){
+        # drop_line <- min(which(drop_line_check))
+      # }
       
-      if(exists("drop_line")){raw_data <- raw_data[(drop_line+1):nrow(raw_data)]}
+      # if(exists("drop_line")){raw_data <- raw_data[(drop_line+1):nrow(raw_data)]}
       
       if (identical(meta_data[V1 %like% "v2.0", V1],character(0))){
         software_version <- "unknown_software_vers"
