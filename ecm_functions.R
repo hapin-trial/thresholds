@@ -1,17 +1,19 @@
 ## uncomment for running locally, makes things a little easier. 
-suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
-suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
-suppressWarnings(suppressPackageStartupMessages(library(plyr)))
-suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
-suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
-suppressWarnings(suppressPackageStartupMessages(library(devtools)))
-suppressWarnings(suppressPackageStartupMessages(library(zoo)))
-suppressWarnings(suppressPackageStartupMessages(library(digest)))
-suppressWarnings(suppressPackageStartupMessages(library(data.table)))
-suppressWarnings(suppressPackageStartupMessages(library(parallel)))
-tz="UTC"
-dummy_meta_data <- fread('https://raw.githubusercontent.com/hapin-trial/thresholds/master/dummy_meta_data.csv')
-file="/Users/ricardopiedrahita/Downloads/45043_PEM_03_ECM00355_4M53208_06012020.CSV"
+# suppressWarnings(suppressPackageStartupMessages(library(gmailr)))
+# suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+# suppressWarnings(suppressPackageStartupMessages(library(plyr)))
+# suppressWarnings(suppressPackageStartupMessages(library(ggplot2)))
+# suppressWarnings(suppressPackageStartupMessages(library(reshape2)))
+# suppressWarnings(suppressPackageStartupMessages(library(devtools)))
+# suppressWarnings(suppressPackageStartupMessages(library(zoo)))
+# suppressWarnings(suppressPackageStartupMessages(library(digest)))
+# suppressWarnings(suppressPackageStartupMessages(library(data.table)))
+# suppressWarnings(suppressPackageStartupMessages(library(parallel)))
+# tz="UTC"
+# dummy_meta_data <- fread('https://raw.githubusercontent.com/hapin-trial/thresholds/master/dummy_meta_data.csv')
+
+# file <- '/Users/ajayp/Desktop/48007_PEM_01_ECM00140_4M52016_26092019.csv'
+# file="/Users/ricardopiedrahita/Downloads/45043_PEM_03_ECM00355_4M53208_06012020.CSV"
 
 
 dummy_meta_data$download_date <-  as.POSIXct(dummy_meta_data$download_date)
@@ -166,7 +168,9 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
     }else{
       
       #Use empty acc_comp data to remove empty rows associated with not-sampling.
-      raw_data <- raw_data[!is.na(acc_comp),] #Just doing it... problem?
+      # raw_data <- raw_data[!is.na(acc_comp),] #Just doing it... problem?
+      #i think maybe a problem. try file 48007_PEM_01_ECM00140_4M52016_26092019.csv
+      # the accelerometer is set to log every 30 seconds. 
       
       date_format <- as.character(date_formats[value==date_formats[!is.na(value),min(value)], variable])
       
