@@ -282,7 +282,9 @@ ecm_qa <- function(file, setShiny=TRUE){
       #updated.  If more than 5% of data points are above 5, flag it.
       inletp_flag <- if(
         raw_data_long[
-        variable=='inlet_pres' & (!is.na(value) || !(value=="")), 
+        value != "" & 
+        variable=='inlet_pres' & 
+        !is.na(value), 
         quantile(as.numeric(value), 0.95, na.rm = T)] > inlet_pressure_threshold){1}else{0}
       
       #temperature range flag.  If more than 50% of points are outside the temp threshold, flag it.  
