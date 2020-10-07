@@ -318,7 +318,8 @@ ecm_qa <- function(file, setShiny=TRUE){
       n_flow_deviation <- raw_data[!(flow %between% flow_thresholds), length(flow)]
       percent_flow_deviation <- round(raw_data[!(flow %between% flow_thresholds), length(flow)]/raw_data[flow %between% flow_thresholds, length(flow)],2)
       n_shutdown_reasons <- sum(raw_data[,shutdown_reason %like% "Flow blocked"]) #Flag if more than 60 instances of flow blocked (five minutes equivalent)
-      flow_flag <- if(percent_flow_deviation>flow_cutoff_threshold | is.nan(percent_flow_deviation) | flow_min<flow_min_threshold | flow_max>flow_max_threshold | n_shutdown_reasons>60 | flow_missing_percent == 100){1}else{0}
+      # flow_flag <- if(percent_flow_deviation>flow_cutoff_threshold | is.nan(percent_flow_deviation) | flow_min<flow_min_threshold | flow_max>flow_max_threshold | n_shutdown_reasons>60 | flow_missing_percent == 100){1}else{0}
+      flow_flag <- if(percent_flow_deviation>flow_cutoff_threshold | is.nan(percent_flow_deviation) |n_shutdown_reasons>60 | flow_missing_percent == 100){1}else{0}
       
       
       #sample duration
