@@ -72,7 +72,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
     rm(unprocessed)
     #add "fake" metadata
     metadata <- dummy_meta_data
-    metadata$file <- basename(file)
+    metadata$file <- file
     metadata$qa_date = as.Date(Sys.Date())
     metadata$flags <- 'file not processed'
     metadata[, c('smry', 'analysis') := NULL]
@@ -160,7 +160,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
       base::message(basename(file), " has no parseable date.")
       #add "fake" metadata
       metadata <- dummy_meta_data
-      metadata$file <- basename(file)
+      metadata$file <- file
       metadata$qa_date = as.Date(Sys.Date())
       metadata$flags <- 'No usable date'
       metadata[, c('smry', 'analysis') := NULL]
@@ -208,7 +208,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
       
       meta_data <- data.table(
         download_date = meta_data[V1=='Download Date:', mdy(V2, tz=tz)],
-        file = basename(file),
+        file = file,
         qa_date = as.Date(Sys.Date()),
         neph_slope = sensor_data[sensor=='Nephelometer', slope],
         neph_offset = sensor_data[sensor=='Nephelometer', offset],
