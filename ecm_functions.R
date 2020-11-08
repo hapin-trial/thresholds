@@ -344,7 +344,7 @@ ecm_ingest_v2 <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta
       #get the max date in the raw_data for which acc_comp is not missing (i.e. data is still logging, not some weird
       #post sampling artifact. May not be right.)
       raw_data[, `:=`(SUM = sum(.SD, na.rm=TRUE)),.SDcols=c(1:12),by=1:nrow(raw_data)] 
-      max_file_date <- raw_data[SUM!=0, max(datetime)]
+      max_file_date <- raw_data[nrow(raw_data[SUM!=0]), datetime]
 
       #create revised date formats table: look for difference between DATE of download and DATE of the file's max timestamp
       revised_date_formats <- melt(
