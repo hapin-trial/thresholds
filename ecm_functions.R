@@ -473,7 +473,7 @@ ecm_qa <- function(file, setShiny=TRUE){
         variable=='inlet_pres' & 
         !is.na(value), 
         quantile(as.numeric(value), 0.95, na.rm = T)]
-      if(is.numeric(inletp_flag_condition)){
+      if(!is.na(inletp_flag_condition)){
         inletp_flag <- if(inletp_flag_condition > inlet_pressure_threshold){1}else{0}
       }else{
         inletp_flag <- NA
