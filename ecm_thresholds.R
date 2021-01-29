@@ -19,8 +19,8 @@ large_negative_threshold <- -50
 
 #Depositions to corroborate with BC data, or photos of filters
 large_negative_threshold_mg = -.01 #Values of micrograms (depositions) (10µg).  This value is approx the detection limit (3*sd of blanks)
-large_positive_threshold_mg = .200
-bc_outlier_threshold_µg = 10 #only excludes grav value if BC is less than this value (unit of µg), and grav value is greater than .2mg.
+large_positive_threshold_mg = .500
+bc_outlier_threshold_µg = 10 #only excludes grav value if BC deposition is less than this value (unit of µg), and grav value is greater than .5mg.
 bc_large_positive_threshold_µg = 100 #Values greater than this will be excluded - there are no values above 56 in bl p1 p2.
 
 
