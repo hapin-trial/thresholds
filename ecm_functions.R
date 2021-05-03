@@ -250,7 +250,7 @@ ecm_ingest_v2 <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta
   
   dummy_meta_data <- get(dummy, envir=.GlobalEnv)
   
-  if(!shiny){ecm_copy(file)}
+  # if(!shiny){ecm_copy(file)}
   
   unprocessed <- read.csv(file, nrow=1, header=F, stringsAsFactor=F)$V1
   
@@ -267,10 +267,10 @@ ecm_ingest_v2 <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta
   }else{
     rm(unprocessed)
     #separate out raw, meta, and sensor data
-    raw_data <- fread(file, skip = 29) 
+    raw_data <- fread(cmd = paste("grep --text 'Errored Line' -v ", '"',file, '"', sep = ""), skip = 29) 
 
     if(nrow(raw_data) < 300){
-      message(basename(file), " has less than 300 rows of data.")
+      base::message(basename(file), " has less than 300 rows of data.")
       return(NULL)
     }else{
 
