@@ -341,6 +341,9 @@ ecm_ingest_v2 <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta
     
       #extract download date from metadata
       download_date <- mdy(meta_data[2,V2])
+      if(is.na(download_date)){
+        download_date <- mdy(meta_data[grep('Download Date', meta_data$V1), V2])
+      }
       #get the max date in the raw_data for which acc_comp is not missing (i.e. data is still logging, not some weird
       #post sampling artifact. May not be right.)
       raw_data[, `:=`(SUM = sum(.SD, na.rm=TRUE)),.SDcols=c(1:12),by=1:nrow(raw_data)] 
