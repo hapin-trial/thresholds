@@ -557,7 +557,7 @@ ecm_qa <- function(file, setShiny=TRUE){
       
       meta_data[, flag_total:=sum(dur_flag, neph_flag, flow_flag, bl_flag,compliance_flag), by=.SD]
       
-      flags_str <- suppressWarnings(paste(melt(meta_data[,c(colnames(meta_data)[colnames(meta_data) %like% "flag"]), with=F])[value>0 & variable!="flag_total", gsub("_flag", "" , variable)] , collapse=", "))
+      flags_str <- suppressWarnings(paste(melt.data.table(meta_data[,c(colnames(meta_data)[colnames(meta_data) %like% "flag"]), with=F])[value>0 & variable!="flag_total", gsub("_flag", "" , variable)] , collapse=", "))
       
       meta_data[, flags:=flags_str]
       
