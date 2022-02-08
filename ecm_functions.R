@@ -145,7 +145,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
       #post sampling artifact. May not be right.)
       max_file_date <- raw_data[nrow(raw_data[!is.na(acc_comp)]), datetime]
       #create revised date formats table: look for difference between DATE of download and DATE of the file's max timestamp
-      revised_date_formats <- melt(data.table(
+      revised_date_formats <- melt.data.table(data.table(
         dmy = as.numeric(difftime(download_date, as.Date(suppressWarnings(dmy_hms(max_file_date))), unit = 'hours')),
         ymd = as.numeric(difftime(download_date, as.Date(suppressWarnings(ymd_hms(max_file_date))), unit = 'hours')),
         mdy = as.numeric(difftime(download_date, as.Date(suppressWarnings(mdy_hms(max_file_date))), unit = 'hours'))
