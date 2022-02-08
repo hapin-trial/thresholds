@@ -446,7 +446,7 @@ ecm_qa <- function(file, setShiny=TRUE){
       return(meta_data)
     }else{
       raw_data <- ingest$raw_data
-      raw_data_long <- melt(raw_data[, c(1,3,4,5,6,8,12,14)], id.var='datetime')
+      raw_data_long <- as.data.table(melt(raw_data[, c(1,3,4,5,6,8,12,14)], id.var='datetime'))
       
       #create a rounded dt variable
       raw_data[, round_time:=round_date(datetime, 'hour')]
