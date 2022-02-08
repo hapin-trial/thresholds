@@ -132,7 +132,7 @@ ecm_ingest <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta_da
     
     #since samples are short, simply "guessing" doesn't work -- for example, some files were taken between 8/8 and 8/10.
     #Use a simple algorithm to determine, of the three DT options below, which one has the smallest overall range
-    date_formats <- suppressWarnings(melt(data.table(
+    date_formats <- suppressWarnings(melt.data.table(data.table(
       dmy = raw_data[, as.numeric(difftime(max(dmy_hms(datetime, tz=tz)), min(dmy_hms(datetime, tz=tz))))],
       ymd = raw_data[, as.numeric(difftime(max(ymd_hms(datetime, tz=tz)), min(ymd_hms(datetime, tz=tz))))],
       mdy = raw_data[, as.numeric(difftime(max(mdy_hms(datetime, tz=tz)), min(mdy_hms(datetime, tz=tz))))]
@@ -330,7 +330,7 @@ ecm_ingest_v2 <- function(file, tz="UTC", shiny=TRUE, output=c('raw_data', 'meta
     #since samples are short, simply "guessing" doesn't work -- for example, some files were taken between 8/8 and 8/10.
     #Use a simple algorithm to determine, of the three DT options below, which one has the smallest overall range
     date_formats <- suppressWarnings(
-      melt(
+      melt.data.table(
         data.table(
           dmy = raw_data[, as.numeric(difftime(max(dmy_hms(datetime, tz=tz)), min(dmy_hms(datetime, tz=tz))))],
           ymd = raw_data[, as.numeric(difftime(max(ymd_hms(datetime, tz=tz)), min(ymd_hms(datetime, tz=tz))))],
