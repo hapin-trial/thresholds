@@ -562,25 +562,39 @@ ecm_qa <- function(file, setShiny=TRUE){
       meta_data[, flags:=flags_str]
       
       meta_data$study_phase <- gsub("^0+", "", meta_data$study_phase)
+    
+      #this needs to be confirmed.
+      meta_data[irc == 'peru' & study_phase %like% "_07_", study_phase == '6']
+      
       meta_data[, study_phase := dplyr::recode(study_phase, 
                                                "1" = "baseline",
                                                "s1" = "blp1",
                                                "bl-p1" = "blp1",
+                                               "1.5" = "blp1",
                                                "2" = "p1",
                                                "s2" = "p1p2",
                                                "p1-p2" = "p1p2",
+                                               "2.5" = "p1p2",
                                                "3" = "p2",
                                                "s3" = "p2b1",
                                                "p2-b1" = "p2b1",
+                                               "3.5" = "p2b1",
                                                "4" = "b1",
                                                "s4" = "b1b2",
+                                               "b1 tob2" = "b1b2",
                                                "b1-b2" = "b1b2",
+                                               "4.5" = "b1b2",
                                                "5" = "b2",
                                                "s5" = "b2b3",
                                                "b2-b3" = "b2b3",
+                                               "5.5" = "b2b3",
                                                "s6" = "b3b4",
                                                "b3-b4" = "b3b4",
-                                               "6" = "b4"
+                                               "6.6" = "b3b4",
+                                               "6.5" = "b3b4",
+                                               "6" = "b4",
+                                               "7" = "b5",
+                                               "8" = "b5"
       )]
       meta_data[, loc := dplyr::recode(tolower(loc), "pem" = "m", 
                                        "pem " = "m", 
