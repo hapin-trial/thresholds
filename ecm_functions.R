@@ -564,7 +564,7 @@ ecm_qa <- function(file, setShiny=TRUE){
       meta_data$study_phase <- gsub("^0+", "", meta_data$study_phase)
     
       #this needs to be confirmed.
-      meta_data[irc == 'peru' & study_phase %like% "_07_", study_phase == '6']
+      meta_data[x %like% 'PERU|peru' & study_phase %like% "_07_", study_phase == '6']
       
       meta_data[, study_phase := dplyr::recode(study_phase, 
                                                "1" = "baseline",
